@@ -1,77 +1,48 @@
 # SAL Anomaly Dashboard
 
-GitHub Pages dashboard for MPAS-Ocean SAL mass anomaly tidal validation.
+GitHub Pages site for MPAS-Ocean SAL tidal validation against TPXO.
+
+Live at <https://wpringle.github.io/sal-anomaly-dashboard/>
 
 ## Structure
 
 ```
-├── index.html          # About page
-├── comparison.html     # Interactive station map + time series
+├── index.html                 # redirect to tpxo.html
+├── tpxo.html                  # TPXO harmonic validation dashboard (standalone)
 ├── css/style.css
-├── js/comparison.js
-└── data/
-    ├── stations.json          # Station index with metrics per run
-    └── timeseries/<id>.json   # Per-station time series (one file per station)
+└── img/
+    ├── tpxo/
+    │   ├── bpanomaly/         # harmonic plots + amp/phase error maps per run
+    │   ├── atm-tide-only/
+    │   ├── ZAE0.0/ ZAE0.1/ ZAE0.2/ ZAE0.4/
+    │   └── salfix-45d/
+    └── tidal_rmse_diff/       # per-constituent RMSE difference + amp bias maps
 ```
 
-## Data schema
+`tpxo.html` is self-contained: it loads no JSON and pulls image paths directly
+from the `img/` tree, so adding plots is a matter of dropping files in and
+updating the path maps in its inline `<script>`.
 
-### stations.json
+## Station time series
 
-Array of objects:
-```json
-{
-  "station_id": "...",
-  "site_name": "...",
-  "country": "...",
-  "latitude": 0.0,
-  "longitude": 0.0,
-  "dist_km": 0.0,
-  "runs": ["bpanomaly", "atm-tide-only"],
-  "metrics": {
-    "bpanomaly":     { "rmse_m": 0.0, "correlation": 0.0, "bias_m": 0.0, "n_hours": 0 },
-    "atm-tide-only": { "rmse_m": 0.0, "correlation": 0.0, "bias_m": 0.0, "n_hours": 0 }
-  }
-}
+The per-station time-series dashboard (`comparison.html`, `sal-tide-only.html`,
+`comparison-16mo.html`, `steven.html`, `zae.html` and `data/`) was removed from
+this site — the JSON totalled ~2.4 GB against a 1 GB GitHub Pages site limit.
+`data/` is now gitignored. Everything is recoverable from history:
+
+```bash
+git checkout 3f43332 -- data comparison.html js
 ```
-
-### timeseries/<station_id>.json
-
-```json
-{
-  "station_id": "...",
-  "site_name": "...",
-  "country": "...",
-  "t0": "2017-01-01T00:00:00",
-  "dt_hours": 0.1,
-  "n": 87660,
-  "obs":              [...],
-  "obs_ntr":          [...],
-  "bpanomaly":        [...],
-  "bpanomaly_ntr":    [...],
-  "atm-tide-only":    [...],
-  "atm-tide-only_ntr":[...],
-  "metrics": {
-    "bpanomaly":     { "rmse_m": 0.0, "correlation": 0.0, "bias_m": 0.0, "n_hours": 0 },
-    "atm-tide-only": { "rmse_m": 0.0, "correlation": 0.0, "bias_m": 0.0, "n_hours": 0 }
-  }
-}
-```
-
-## Adding a new run
-
-1. Add an entry to the `RUNS` array in `js/comparison.js`
-2. Add the run's metrics to `stations.json` under each station's `metrics` dict
-3. Add `<runkey>` and `<runkey>_ntr` arrays to each timeseries JSON
 
 ## Local testing
 
 ```bash
-cd ~/scratch/libs/sal-anomaly-dashboard
 python3 -m http.server 8000
 # open http://localhost:8000
 ```
 
 ## Deployment
 
-Push to GitHub, enable Pages on `main` branch from root.
+`.github/workflows/pages.yml` deploys the repo root to GitHub Pages on every
+push to `main`. Because this repo is a fork, Actions must be enabled once from
+the Actions tab before the workflow will run.

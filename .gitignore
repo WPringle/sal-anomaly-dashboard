@@ -1,3 +1,7 @@
 .DS_Store
 *.pyc
 __pycache__/
+
+# Station time-series JSON (~2.4 GB) — exceeds the 1 GB GitHub Pages site limit.
+# Kept on disk locally; regenerate rather than committing.
+data/
