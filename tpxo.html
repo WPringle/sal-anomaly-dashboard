@@ -128,6 +128,24 @@
     font-size: 0.95rem;
   }
 
+  /* TPXO9 reference panel stacked under model-only runs */
+  .ref-block { margin-top: 0.85rem; }
+
+  .ref-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.4rem;
+    padding-left: 0.15rem;
+  }
+
+  .ref-block .plot-display {
+    min-height: 0;
+    border-style: dashed;
+  }
+
   /* RMSE table */
   .rmse-table {
     width: 100%;
@@ -362,6 +380,14 @@
     <div class="plot-display" id="plot-display">
       <img id="plot-img" src="img/tpxo/bpanomaly/M2_plot.png" alt="M2 TPXO9 comparison">
     </div>
+
+    <!-- TPXO9 reference, shown under runs whose own figure has no TPXO panel -->
+    <div class="ref-block" id="ref-block" hidden>
+      <div class="ref-label">TPXO9 reference &mdash; same constituent, for comparison</div>
+      <div class="plot-display">
+        <img id="ref-img" src="" alt="">
+      </div>
+    </div>
     <p class="caption" id="plot-caption">
       Each panel: (top-left) MPAS-Ocean amplitude, (top-right) TPXO9 amplitude,
       (bottom-left) amplitude RMSE, (bottom-right) complex RMSE.
@@ -391,8 +417,9 @@
 
   var runCaptions = {
     'salfix-45d':
-      'MPAS-Ocean amplitude only (no TPXO panels &mdash; TPXO9 fields were not available on the machine ' +
-      'these were produced on). Co-tidal phase lines every 30&deg;. IcoswISC30E3r5, 70-day run with the ' +
+      'MPAS-Ocean amplitude only &mdash; TPXO9 fields were not available on the machine these were ' +
+      'produced on, so the TPXO9 reference map for this constituent is shown separately below. ' +
+      'Co-tidal phase lines every 30&deg;. IcoswISC30E3r5, 70-day run with the ' +
       'ice-shelf-cavity SAL fix (scalar SAL applied to pressure-adjusted SSH); harmonics over days 20&ndash;65. ' +
       'Re-solved from the least-squares accumulators with K2, P1 and Q1 dropped: at 45 days K1/P1 and S2/K2 ' +
       'need 182.6 days to separate and made the full 8-constituent system near-singular (cond 8.4e5 &rarr; 5.5e2). ' +
@@ -433,6 +460,27 @@
       cap.innerHTML = runCaptions[currentRun];
     } else {
       cap.innerHTML = captions[currentView];
+    }
+
+    updateRef();
+  }
+
+  // The multi-panel figures already show TPXO9 alongside the simulation, so the
+  // reference is only worth repeating under model-only runs, whose figure is a
+  // bare model map. Shown for the harmonic view only.
+  function updateRef() {
+    var block = document.getElementById('ref-block');
+    var img   = document.getElementById('ref-img');
+    var show  = currentView === 'harmonic' &&
+                modelOnlyRuns.indexOf(currentRun) !== -1;
+
+    block.hidden = !show;
+    if (show) {
+      img.src = 'img/tpxo/tpxo9/' + currentConst + '_amp.png';
+      img.alt = currentConst + ' amplitude, TPXO9 reference';
+    } else {
+      img.removeAttribute('src');
+      img.alt = '';
     }
   }
 
