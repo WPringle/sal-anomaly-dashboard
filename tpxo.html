@@ -39,6 +39,7 @@
   .run-tab.run-coupled  { border-top: 3px solid #2ca02c; }
   .run-tab.run-baseline { border-top: 3px solid #1f77b4; }
   .run-tab.run-zae      { border-top: 3px solid #ff7f0e; }
+  .run-tab.run-salfix   { border-top: 3px solid #d62728; }
 
   .run-panel { display: none; }
   .run-panel.active { display: block; }
@@ -98,6 +99,9 @@
   /* Only show diff/bias views when bpanomaly is selected */
   .diff-only { display: none; }
   .show-diff-views .diff-only { display: inline-block; }
+
+  /* Runs with model-only maps (no TPXO error fields) hide the error views */
+  .model-only .err-view { display: none; }
 
   .sep { width: 1px; height: 1.2rem; background: var(--border); align-self: center; }
 
@@ -332,13 +336,14 @@
       <div class="run-tab run-zae"             onclick="selectRun('ZAE0.1')">ZAE=0.1 (6mo)</div>
       <div class="run-tab run-zae"             onclick="selectRun('ZAE0.2')">ZAE=0.2 (6mo)</div>
       <div class="run-tab run-zae"             onclick="selectRun('ZAE0.4')">ZAE=0.4 (6mo)</div>
+      <div class="run-tab run-salfix"          onclick="selectRun('salfix-45d')">SAL cavity fix (45d HA)</div>
     </div>
 
     <!-- View selector -->
     <div class="view-nav" id="view-nav">
       <button class="view-btn active" onclick="selectView('harmonic')">Harmonic maps</button>
-      <button class="view-btn"        onclick="selectView('amperr')">Amplitude error</button>
-      <button class="view-btn"        onclick="selectView('phaseerr')">Phase error</button>
+      <button class="view-btn err-view" onclick="selectView('amperr')">Amplitude error</button>
+      <button class="view-btn err-view" onclick="selectView('phaseerr')">Phase error</button>
       <div class="sep"></div>
       <button class="view-btn diff-only" onclick="selectView('diff')">RMSE difference (BP &minus; Atm)</button>
       <button class="view-btn diff-only" onclick="selectView('ampbias')">Amplitude bias</button>
@@ -378,6 +383,20 @@
     'ZAE0.1':       'img/tpxo/ZAE0.1',
     'ZAE0.2':       'img/tpxo/ZAE0.2',
     'ZAE0.4':       'img/tpxo/ZAE0.4',
+    'salfix-45d':   'img/tpxo/salfix-45d',
+  };
+
+  // Runs whose figures are model-only (single panel, no TPXO comparison panels).
+  var modelOnlyRuns = ['salfix-45d'];
+
+  var runCaptions = {
+    'salfix-45d':
+      'MPAS-Ocean amplitude only (no TPXO panels &mdash; TPXO9 fields were not available on the machine ' +
+      'these were produced on). Co-tidal phase lines every 30&deg;. IcoswISC30E3r5, 70-day run with the ' +
+      'ice-shelf-cavity SAL fix (scalar SAL applied to pressure-adjusted SSH); harmonics over days 20&ndash;65. ' +
+      'Re-solved from the least-squares accumulators with K2, P1 and Q1 dropped: at 45 days K1/P1 and S2/K2 ' +
+      'need 182.6 days to separate and made the full 8-constituent system near-singular (cond 8.4e5 &rarr; 5.5e2). ' +
+      'M2 uses the same 0&ndash;1.40 m scale as the other runs; S2/N2/K1/O1 scales differ, so compare patterns rather than colours.',
   };
 
   var captions = {
@@ -408,7 +427,13 @@
     }
 
     display.innerHTML = '<img id="plot-img" src="' + src + '" alt="' + currentConst + ' plot">';
-    cap.innerHTML = captions[currentView];
+
+    // Model-only runs carry their own caption for the harmonic view
+    if (currentView === 'harmonic' && runCaptions[currentRun]) {
+      cap.innerHTML = runCaptions[currentRun];
+    } else {
+      cap.innerHTML = captions[currentView];
+    }
   }
 
   function selectRun(run) {
@@ -417,12 +442,15 @@
 
     // Update run tab highlighting
     var tabs = document.querySelectorAll('.run-tab');
-    var runKeys = ['bpanomaly', 'atm-tide-only', 'ZAE0.0', 'ZAE0.1', 'ZAE0.2', 'ZAE0.4'];
+    var runKeys = ['bpanomaly', 'atm-tide-only', 'ZAE0.0', 'ZAE0.1', 'ZAE0.2', 'ZAE0.4', 'salfix-45d'];
     tabs.forEach(function(t, i) { t.classList.toggle('active', runKeys[i] === run); });
 
     // Show diff/bias view buttons only for bpanomaly
     var viewNav = document.getElementById('view-nav');
     viewNav.classList.toggle('show-diff-views', run === 'bpanomaly');
+
+    // Hide the TPXO error views for runs that only have model maps
+    viewNav.classList.toggle('model-only', modelOnlyRuns.indexOf(run) !== -1);
 
     // Reset view btn highlight
     document.querySelectorAll('.view-btn').forEach(function(b) {
