@@ -419,10 +419,14 @@
     'salfix-45d':
       'MPAS-Ocean amplitude only &mdash; TPXO9 fields were not available on the machine these were ' +
       'produced on, so the TPXO9 reference map for this constituent is shown separately below. ' +
-      'Co-tidal phase lines every 30&deg;. IcoswISC30E3r5, 70-day run with the ' +
-      'ice-shelf-cavity SAL fix (scalar SAL applied to pressure-adjusted SSH); harmonics over days 20&ndash;65. ' +
-      'Re-solved from the least-squares accumulators with K2, P1 and Q1 dropped: at 45 days K1/P1 and S2/K2 ' +
-      'need 182.6 days to separate and made the full 8-constituent system near-singular (cond 8.4e5 &rarr; 5.5e2). ' +
+      'Co-tidal phase lines every 30&deg;. IcoswISC30E3r5, 66-day run with the ' +
+      'ice-shelf-cavity SAL fix (scalar SAL applied to pressure-adjusted SSH) and bottom drag ' +
+      'C<sub>d</sub>=0.0025; harmonics over days 20&ndash;65. Forced <em>and</em> analysed with ' +
+      'M2, S2, N2, K1, O1 only. At 45 days K1/P1 and S2/K2 need 182.6 days to separate, and including ' +
+      'them made the 8-constituent normal matrix near-singular (cond 8.4e5), corrupting every constituent; ' +
+      'restricting the forcing as well as the analysis leaves no unresolvable tidal energy to leak into the fit. ' +
+      'Resulting ratios N2/M2=0.18, K1/M2=0.61, O1/M2=0.45 are close to observed (~0.19, ~0.58, ~0.41); ' +
+      'S2/M2=0.37 vs ~0.46. Absolute amplitudes remain low against TPXO9 (global mean M2 0.169 m). ' +
       'M2 uses the same 0&ndash;1.40 m scale as the other runs; S2/N2/K1/O1 scales differ, so compare patterns rather than colours.',
   };
 
