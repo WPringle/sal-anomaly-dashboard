@@ -354,7 +354,9 @@
       <div class="run-tab run-zae"             onclick="selectRun('ZAE0.1')">ZAE=0.1 (6mo)</div>
       <div class="run-tab run-zae"             onclick="selectRun('ZAE0.2')">ZAE=0.2 (6mo)</div>
       <div class="run-tab run-zae"             onclick="selectRun('ZAE0.4')">ZAE=0.4 (6mo)</div>
-      <div class="run-tab run-salfix"          onclick="selectRun('salfix-45d')">SAL cavity fix (45d HA)</div>
+      <div class="run-tab run-salfix"          onclick="selectRun('betaSAL-45d')">&beta; SAL (45d)</div>
+      <div class="run-tab run-salfix"          onclick="selectRun('SAL29-45d')">Full SAL n=29 (45d)</div>
+      <div class="run-tab run-salfix"          onclick="selectRun('SAL29-loglaw-45d')">Full SAL n=29 + log-law (45d)</div>
     </div>
 
     <!-- View selector -->
@@ -409,25 +411,42 @@
     'ZAE0.1':       'img/tpxo/ZAE0.1',
     'ZAE0.2':       'img/tpxo/ZAE0.2',
     'ZAE0.4':       'img/tpxo/ZAE0.4',
-    'salfix-45d':   'img/tpxo/salfix-45d',
+    'betaSAL-45d':      'img/tpxo/betaSAL-45d',
+    'SAL29-45d':        'img/tpxo/SAL29-45d',
+    'SAL29-loglaw-45d': 'img/tpxo/SAL29-loglaw-45d',
   };
 
   // Runs whose figures are model-only (single panel, no TPXO comparison panels).
-  var modelOnlyRuns = ['salfix-45d'];
+  var modelOnlyRuns = ['betaSAL-45d', 'SAL29-45d', 'SAL29-loglaw-45d'];
 
-  var runCaptions = {
-    'salfix-45d':
+  // Shared preamble for the 45-day suite; each run appends its own line.
+  var salSuiteCommon =
       'MPAS-Ocean amplitude only &mdash; TPXO9 fields were not available on the machine these were ' +
       'produced on, so the TPXO9 reference map for this constituent is shown separately below. ' +
-      'Co-tidal phase lines every 30&deg;. IcoswISC30E3r5, 66-day run with the ' +
-      'ice-shelf-cavity SAL fix (scalar SAL applied to pressure-adjusted SSH) and bottom drag ' +
-      'C<sub>d</sub>=0.0025; harmonics over days 20&ndash;65. Forced <em>and</em> analysed with ' +
-      'M2, S2, N2, K1, O1 only. At 45 days K1/P1 and S2/K2 need 182.6 days to separate, and including ' +
-      'them made the 8-constituent normal matrix near-singular (cond 8.4e5), corrupting every constituent; ' +
-      'restricting the forcing as well as the analysis leaves no unresolvable tidal energy to leak into the fit. ' +
-      'Resulting ratios N2/M2=0.18, K1/M2=0.61, O1/M2=0.45 are close to observed (~0.19, ~0.58, ~0.41); ' +
-      'S2/M2=0.37 vs ~0.46. Absolute amplitudes remain low against TPXO9 (global mean M2 0.169 m). ' +
-      'M2 uses the same 0&ndash;1.40 m scale as the other runs; S2/N2/K1/O1 scales differ, so compare patterns rather than colours.',
+      'Co-tidal phase lines every 30&deg;. IcoswISC30E3r5 (~30 km), 66-day run with the ice-shelf-cavity ' +
+      'SAL fix; harmonics over days 20&ndash;65, forced and analysed with M2 S2 N2 K1 O1. ' +
+      'Run as a SINGLE job: the LSQ accumulators are not restored across restarts, so earlier segmented ' +
+      'runs solved on only their final segment (10.1 and 2.0 days rather than 45). Verified here at ' +
+      '2161 samples = 45.0 days. Ratios N2/M2 0.20, K1/M2 0.62, O1/M2 0.46 against observed ' +
+      '0.19/0.58/0.41; S2/M2 0.40 vs 0.46. ' +
+      'M2 uses the same 0&ndash;1.40 m scale as the other runs; S2/N2/K1/O1 scales differ, ' +
+      'so compare patterns rather than colours. ';
+
+  var runCaptions = {
+    'betaSAL-45d': salSuiteCommon +
+      '<b>This run:</b> scalar SAL &beta;=0.09 with constant C<sub>d</sub>=0.0025 &mdash; the baseline ' +
+      'the other two are compared against. Global mean M2 0.1725 m.',
+    'SAL29-45d': salSuiteCommon +
+      '<b>This run:</b> full parallel SAL, spherical-harmonic order 29 (lmax 465, ~690 km), constant ' +
+      'C<sub>d</sub>=0.0025. Global mean M2 0.1592 m &mdash; <b>7.7% lower</b> than the &beta; ' +
+      'approximation, i.e. full SAL slightly worsens the amplitude deficit rather than closing it.',
+    'SAL29-loglaw-45d': salSuiteCommon +
+      '<b>This run:</b> full parallel SAL order 29 with log-law bottom drag, z<sub>0</sub>=0.01 m, ' +
+      'C<sub>d</sub> clamped to [0.002, 0.01]. On this grid that gives 1.93&times; the constant drag on ' +
+      'the shelf, 1.35&times; on the slope and 0.81&times; in the deep ocean &mdash; a redistribution, not ' +
+      'a uniform increase. Global mean M2 0.1587 m, only 0.3% from the constant-C<sub>d</sub> SAL run, so ' +
+      'essentially a null result globally; peak M2 falls further (2.37 &rarr; 2.07 m), so the effect is ' +
+      'concentrated on high-amplitude shelves.',
   };
 
   var captions = {
@@ -494,7 +513,8 @@
 
     // Update run tab highlighting
     var tabs = document.querySelectorAll('.run-tab');
-    var runKeys = ['bpanomaly', 'atm-tide-only', 'ZAE0.0', 'ZAE0.1', 'ZAE0.2', 'ZAE0.4', 'salfix-45d'];
+    var runKeys = ['bpanomaly', 'atm-tide-only', 'ZAE0.0', 'ZAE0.1', 'ZAE0.2', 'ZAE0.4',
+                   'betaSAL-45d', 'SAL29-45d', 'SAL29-loglaw-45d'];
     tabs.forEach(function(t, i) { t.classList.toggle('active', runKeys[i] === run); });
 
     // Show diff/bias view buttons only for bpanomaly
