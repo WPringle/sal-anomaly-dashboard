@@ -40,6 +40,7 @@
   .run-tab.run-baseline { border-top: 3px solid #1f77b4; }
   .run-tab.run-zae      { border-top: 3px solid #ff7f0e; }
   .run-tab.run-salfix   { border-top: 3px solid #d62728; }
+  .run-tab.run-dt600    { border-top: 3px solid #9467bd; }
 
   .run-panel { display: none; }
   .run-panel.active { display: block; }
@@ -357,6 +358,7 @@
       <div class="run-tab run-salfix"          onclick="selectRun('betaSAL-45d')">&beta; SAL (45d)</div>
       <div class="run-tab run-salfix"          onclick="selectRun('SAL29-45d')">Full SAL n=29 (45d)</div>
       <div class="run-tab run-salfix"          onclick="selectRun('SAL29-loglaw-45d')">Full SAL n=29 + log-law (45d)</div>
+      <div class="run-tab run-dt600"           onclick="selectRun('SAL29-loglaw-dt600-45d')">&nbsp;&#9733; + &Delta;t=600 s (45d)</div>
     </div>
 
     <!-- View selector -->
@@ -414,10 +416,11 @@
     'betaSAL-45d':      'img/tpxo/betaSAL-45d',
     'SAL29-45d':        'img/tpxo/SAL29-45d',
     'SAL29-loglaw-45d': 'img/tpxo/SAL29-loglaw-45d',
+    'SAL29-loglaw-dt600-45d': 'img/tpxo/SAL29-loglaw-dt600-45d',
   };
 
   // Runs whose figures are model-only (single panel, no TPXO comparison panels).
-  var modelOnlyRuns = ['betaSAL-45d', 'SAL29-45d', 'SAL29-loglaw-45d'];
+  var modelOnlyRuns = ['betaSAL-45d', 'SAL29-45d', 'SAL29-loglaw-45d', 'SAL29-loglaw-dt600-45d'];
 
   // Shared preamble for the 45-day suite; each run appends its own line.
   var salSuiteCommon =
@@ -440,6 +443,18 @@
       '<b>This run:</b> full parallel SAL, spherical-harmonic order 29 (lmax 465, ~690 km), constant ' +
       'C<sub>d</sub>=0.0025. Global mean M2 0.1592 m &mdash; <b>7.7% lower</b> than the &beta; ' +
       'approximation, i.e. full SAL slightly worsens the amplitude deficit rather than closing it.',
+    'SAL29-loglaw-dt600-45d': salSuiteCommon +
+      '<b>This run:</b> as the log-law run, but with the baroclinic timestep cut 1800 &rarr; 600 s. '+
+      'The split-explicit solver replaces the barotropic velocity each baroclinic step with a boxcar '+
+      'average over its 2&Delta;t subcycle window, which damps the tide as sinc(&pi;&middot;2&Delta;t/T) '+
+      'per step: at &Delta;t=1800 s that is 23%/tidal cycle for M2, an effective Q&asymp;12, comparable '+
+      'to the real ocean&rsquo;s M2 basin Q of 10&ndash;25 &mdash; enough to suppress resonance. At 600 s '+
+      'it falls to 8.5%/cycle, Q&asymp;36. Global mean M2 rises 0.1587 &rarr; <b>0.2533 m (+60%)</b>, '+
+      'S2 +54%, N2 +64%, while the diurnals gain far less (K1 +15%, O1 +14%) &mdash; exactly as the '+
+      'sinc mechanism predicts, since it bites harder at shorter periods. Shelf/abyss contrast is also '+
+      'restored (0.348 vs 0.239 m, against 0.215 vs 0.165 m before). The harmonic analysis sampling was '+
+      'pinned at 30 min so the diagnostic is identical (LHS[0,0]=1080.5, 2161 samples) and the change is '+
+      'demonstrably the model. Cost: 302 s/simulated day vs 123.',
     'SAL29-loglaw-45d': salSuiteCommon +
       '<b>This run:</b> full parallel SAL order 29 with log-law bottom drag, z<sub>0</sub>=0.01 m, ' +
       'C<sub>d</sub> clamped to [0.002, 0.01]. On this grid that gives 1.93&times; the constant drag on ' +
@@ -514,7 +529,8 @@
     // Update run tab highlighting
     var tabs = document.querySelectorAll('.run-tab');
     var runKeys = ['bpanomaly', 'atm-tide-only', 'ZAE0.0', 'ZAE0.1', 'ZAE0.2', 'ZAE0.4',
-                   'betaSAL-45d', 'SAL29-45d', 'SAL29-loglaw-45d'];
+                   'betaSAL-45d', 'SAL29-45d', 'SAL29-loglaw-45d',
+                   'SAL29-loglaw-dt600-45d'];
     tabs.forEach(function(t, i) { t.classList.toggle('active', runKeys[i] === run); });
 
     // Show diff/bias view buttons only for bpanomaly
