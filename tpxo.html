@@ -42,6 +42,7 @@
   .run-tab.run-salfix   { border-top: 3px solid #d62728; }
   .run-tab.run-dt600    { border-top: 3px solid #9467bd; }
   .run-tab.run-filt     { border-top: 3px solid #17becf; }
+  .run-tab.run-itide    { border-top: 3px solid #e377c2; }
 
   .run-panel { display: none; }
   .run-panel.active { display: block; }
@@ -361,6 +362,7 @@
       <div class="run-tab run-salfix"          onclick="selectRun('SAL29-loglaw-45d')">Full SAL n=29 + log-law (45d)</div>
       <div class="run-tab run-dt600"           onclick="selectRun('SAL29-loglaw-dt600-45d')">&nbsp;&#9733; + &Delta;t=600 s (45d)</div>
       <div class="run-tab run-filt"            onclick="selectRun('SAL29-loglaw-powerlaw-45d')">&nbsp;&#9733;&#9733; + S&amp;McW filter (45d)</div>
+      <div class="run-tab run-itide"           onclick="selectRun('JSL-drag-66d')">&nbsp;&#9733;&#9733;&#9733; + internal tide drag (45d)</div>
     </div>
 
     <!-- View selector -->
@@ -420,11 +422,12 @@
     'SAL29-loglaw-45d': 'img/tpxo/SAL29-loglaw-45d',
     'SAL29-loglaw-dt600-45d': 'img/tpxo/SAL29-loglaw-dt600-45d',
     'SAL29-loglaw-powerlaw-45d': 'img/tpxo/SAL29-loglaw-powerlaw-45d',
+    'JSL-drag-66d': 'img/tpxo/JSL-drag-66d',
   };
 
   // Runs whose figures are model-only (single panel, no TPXO comparison panels).
   var modelOnlyRuns = ['betaSAL-45d', 'SAL29-45d', 'SAL29-loglaw-45d', 'SAL29-loglaw-dt600-45d',
-                   'SAL29-loglaw-powerlaw-45d'];
+                   'SAL29-loglaw-powerlaw-45d', 'JSL-drag-66d'];
 
   // Shared preamble for the 45-day suite; each run appends its own line.
   var salSuiteCommon =
@@ -471,6 +474,29 @@
       'restored (0.348 vs 0.239 m, against 0.215 vs 0.165 m before). The harmonic analysis sampling was '+
       'pinned at 30 min so the diagnostic is identical (LHS[0,0]=1080.5, 2161 samples) and the change is '+
       'demonstrably the model. Cost: 302 s/simulated day vs 123.',
+    'JSL-drag-66d': salSuiteCommon +
+      '<b>This run:</b> as the S&amp;McW power-law run (&#9733;&#9733;), plus an explicit topographic wave ' +
+      'drag &mdash; Jayne &amp; St. Laurent (2001), C = c<sub>topo</sub>&middot;&kappa;&middot;h&sup2;&middot;N<sub>b</sub> ' +
+      'with &kappa;=2&pi;/(10&nbsp;km) and c<sub>topo</sub>=0.5. Everything else is identical to that run, ' +
+      'so the drag is the only difference. h is the subgrid roughness, generated for this mesh from ' +
+      'RTopo-2.0.4 30-arcsec bathymetry with a least-squares plane removed per cell (median 77 m, p99 449 m); ' +
+      'no such field existed for IcoswISC30E3r5 before, and without it the scheme is a silent no-op. ' +
+      'N<sub>b</sub> is taken from the model&rsquo;s own stratification each step, and the drag acts only on ' +
+      'the tidal part of the barotropic velocity &mdash; the complement of a 25-hour boxcar, which keeps ' +
+      '99.3% of M2 while cutting a 30-day flow to 0.2% &mdash; so it does not damp the mean circulation. ' +
+      'The stress is spread over the bottom 500 m rather than dumped in the bottom cell, leaving the ' +
+      'depth-integrated sink unchanged. Supercritical topography (&gamma;=(h/H)/&alpha;<sub>IW</sub>&gt;1, ' +
+      '12% of edges) is saturated by dividing by &gamma;&sup2;: an unsaturated first attempt went unstable ' +
+      'within four timesteps of the drag activating, in strongly stratified tropical water where linear ' +
+      'theory fails badly (&gamma; p99 = 5.9). An explicit-stability clamp is present as a backstop but ' +
+      'never engaged &mdash; 0 edges clamped across the full 66 days &mdash; so the drag is set by the ' +
+      'physics, not by the timestep. ' +
+      '<b>Result:</b> global mean M2 0.3664 &rarr; <b>0.3318 m (&minus;9.4%)</b>, deep-ocean mean &minus;9.5%, ' +
+      'with 93.9% of cells decreasing; S2 0.1349&rarr;0.1262, N2 0.0797&rarr;0.0714, K1 0.1214&rarr;0.1161, ' +
+      'O1 0.0910&rarr;0.0849 m. The largest single reduction is at the Panama Bight approach ' +
+      '(79&deg;W 7&deg;N, steep slope into 2.3&ndash;3.5 km): &minus;0.21 m on a 1.39 m base amplitude. ' +
+      'Note the saturation removes ~37% of the raw global &Sigma;C, so this is a deliberately weaker drag ' +
+      'than an unsaturated JSL formula would give at this roughness.',
     'SAL29-loglaw-45d': salSuiteCommon +
       '<b>This run:</b> full parallel SAL order 29 with log-law bottom drag, z<sub>0</sub>=0.01 m, ' +
       'C<sub>d</sub> clamped to [0.002, 0.01]. On this grid that gives 1.93&times; the constant drag on ' +
@@ -546,7 +572,7 @@
     var tabs = document.querySelectorAll('.run-tab');
     var runKeys = ['bpanomaly', 'atm-tide-only', 'ZAE0.0', 'ZAE0.1', 'ZAE0.2', 'ZAE0.4',
                    'betaSAL-45d', 'SAL29-45d', 'SAL29-loglaw-45d',
-                   'SAL29-loglaw-dt600-45d', 'SAL29-loglaw-powerlaw-45d'];
+                   'SAL29-loglaw-dt600-45d', 'SAL29-loglaw-powerlaw-45d', 'JSL-drag-66d'];
     tabs.forEach(function(t, i) { t.classList.toggle('active', runKeys[i] === run); });
 
     // Show diff/bias view buttons only for bpanomaly
