@@ -36,9 +36,27 @@
     border-bottom: 2px solid var(--card-bg);
   }
 
+  /* Separates the 2D barotropic reference runs from the 3D baroclinic suite */
+  .tab-divider {
+    width: 2px;
+    align-self: stretch;
+    background: var(--border);
+    margin: 0 0.4rem;
+  }
+
+  .tab-group-label {
+    align-self: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 0 0.3rem 0.5rem 0;
+    white-space: nowrap;
+  }
+
   .run-tab.run-coupled  { border-top: 3px solid #2ca02c; }
   .run-tab.run-baseline { border-top: 3px solid #1f77b4; }
-  .run-tab.run-zae      { border-top: 3px solid #ff7f0e; }
   .run-tab.run-salfix   { border-top: 3px solid #d62728; }
   .run-tab.run-dt600    { border-top: 3px solid #9467bd; }
   .run-tab.run-filt     { border-top: 3px solid #17becf; }
@@ -224,11 +242,10 @@
 <body>
 
 <header>
-  <h1>MPAS-Ocean <span>SAL Mass Anomaly Tidal Validation</span></h1>
+  <h1>MPAS-Ocean <span>3D Baroclinic Tidal Validation</span></h1>
   <nav>
     <a href="index.html">About</a>
     <a href="tpxo.html" class="active">TPXO9 Validation</a>
-    <a href="zae.html">ZAE Sensitivity</a>
     <a href="comparison.html">Station Comparison</a>
     <a href="comparison-16mo.html">16-Month Suite</a>
     <a href="steven.html">Steven's Run</a>
@@ -274,18 +291,14 @@
             <th>Con</th>
             <th><span class="run-badge" style="background:#2ca02c"></span>BP Anomaly<br><small>1yr</small></th>
             <th><span class="run-badge" style="background:#1f77b4"></span>Atm Only<br><small>1yr</small></th>
-            <th><span class="run-badge" style="background:#ff7f0e"></span>ZAE=0.0<br><small>6mo</small></th>
-            <th><span class="run-badge" style="background:#ff7f0e"></span>ZAE=0.1<br><small>6mo</small></th>
-            <th><span class="run-badge" style="background:#ff7f0e"></span>ZAE=0.2<br><small>6mo</small></th>
-            <th><span class="run-badge" style="background:#ff7f0e"></span>ZAE=0.4<br><small>6mo</small></th>
           </tr>
         </thead>
         <tbody>
-          <tr><td>M2</td> <td>8.142</td>          <td class="best">4.979</td> <td>9.230</td> <td>6.006</td> <td>6.154</td> <td class="worst">9.869</td></tr>
-          <tr><td>S2</td> <td>3.582</td>          <td class="best">2.117</td> <td>3.491</td> <td>2.867</td> <td>3.291</td> <td class="worst">4.881</td></tr>
-          <tr><td>N2</td> <td>1.654</td>          <td class="best">0.920</td> <td>1.791</td> <td>1.055</td> <td>1.046</td> <td class="worst">1.820</td></tr>
-          <tr><td>K1</td> <td>2.496</td>          <td class="best">1.861</td> <td>2.823</td> <td>2.843</td> <td>2.632</td> <td class="worst">2.962</td></tr>
-          <tr><td>O1</td> <td>1.858</td>          <td class="best">1.336</td> <td class="worst">2.164</td> <td>2.034</td> <td>1.862</td> <td>1.934</td></tr>
+          <tr><td>M2</td> <td>8.142</td> <td class="best">4.979</td></tr>
+          <tr><td>S2</td> <td>3.582</td> <td class="best">2.117</td></tr>
+          <tr><td>N2</td> <td>1.654</td> <td class="best">0.920</td></tr>
+          <tr><td>K1</td> <td>2.496</td> <td class="best">1.861</td></tr>
+          <tr><td>O1</td> <td>1.858</td> <td class="best">1.336</td></tr>
         </tbody>
       </table>
     </div>
@@ -298,18 +311,14 @@
             <th>Con</th>
             <th><span class="run-badge" style="background:#2ca02c"></span>BP Anomaly<br><small>1yr</small></th>
             <th><span class="run-badge" style="background:#1f77b4"></span>Atm Only<br><small>1yr</small></th>
-            <th><span class="run-badge" style="background:#ff7f0e"></span>ZAE=0.0<br><small>6mo</small></th>
-            <th><span class="run-badge" style="background:#ff7f0e"></span>ZAE=0.1<br><small>6mo</small></th>
-            <th><span class="run-badge" style="background:#ff7f0e"></span>ZAE=0.2<br><small>6mo</small></th>
-            <th><span class="run-badge" style="background:#ff7f0e"></span>ZAE=0.4<br><small>6mo</small></th>
           </tr>
         </thead>
         <tbody>
-          <tr><td>M2</td> <td>7.135</td>          <td class="best">2.695</td> <td>6.966</td> <td>3.759</td> <td>4.621</td> <td class="worst">9.019</td></tr>
-          <tr><td>S2</td> <td>3.065</td>          <td class="best">1.336</td> <td>2.818</td> <td>2.113</td> <td>2.657</td> <td class="worst">4.320</td></tr>
-          <tr><td>N2</td> <td>1.426</td>          <td class="best">0.542</td> <td>1.423</td> <td>0.695</td> <td>0.821</td> <td class="worst">1.672</td></tr>
-          <tr><td>K1</td> <td>1.261</td>          <td class="best">1.134</td> <td class="worst">1.762</td> <td>1.609</td> <td>1.339</td> <td>1.754</td></tr>
-          <tr><td>O1</td> <td>1.112</td>          <td class="best">0.686</td> <td class="worst">1.439</td> <td>1.365</td> <td>1.132</td> <td>1.261</td></tr>
+          <tr><td>M2</td> <td>7.135</td> <td class="best">2.695</td></tr>
+          <tr><td>S2</td> <td>3.065</td> <td class="best">1.336</td></tr>
+          <tr><td>N2</td> <td>1.426</td> <td class="best">0.542</td></tr>
+          <tr><td>K1</td> <td>1.261</td> <td class="best">1.134</td></tr>
+          <tr><td>O1</td> <td>1.112</td> <td class="best">0.686</td></tr>
         </tbody>
       </table>
     </div>
@@ -322,26 +331,23 @@
             <th>Con</th>
             <th><span class="run-badge" style="background:#2ca02c"></span>BP Anomaly<br><small>1yr</small></th>
             <th><span class="run-badge" style="background:#1f77b4"></span>Atm Only<br><small>1yr</small></th>
-            <th><span class="run-badge" style="background:#ff7f0e"></span>ZAE=0.0<br><small>6mo</small></th>
-            <th><span class="run-badge" style="background:#ff7f0e"></span>ZAE=0.1<br><small>6mo</small></th>
-            <th><span class="run-badge" style="background:#ff7f0e"></span>ZAE=0.2<br><small>6mo</small></th>
-            <th><span class="run-badge" style="background:#ff7f0e"></span>ZAE=0.4<br><small>6mo</small></th>
           </tr>
         </thead>
         <tbody>
-          <tr><td>M2</td> <td>15.373</td>         <td>14.176</td>         <td class="worst">22.055</td> <td>16.286</td> <td class="best">14.442</td> <td>16.920</td></tr>
-          <tr><td>S2</td> <td>6.825</td>          <td class="best">4.553</td> <td>6.724</td>          <td>6.368</td>  <td>6.870</td>  <td class="worst">8.797</td></tr>
-          <tr><td>N2</td> <td>3.292</td>          <td class="best">2.475</td> <td class="worst">3.946</td> <td>2.702</td> <td>2.283</td> <td>3.053</td></tr>
-          <tr><td>K1</td> <td>6.626</td>          <td class="best">3.973</td> <td>6.686</td>          <td>7.213</td>  <td>7.011</td>  <td class="worst">7.702</td></tr>
-          <tr><td>O1</td> <td>4.530</td>          <td class="best">2.946</td> <td class="worst">5.136</td> <td>4.615</td> <td>4.543</td> <td>4.475</td></tr>
+          <tr><td>M2</td> <td>15.373</td> <td class="best">14.176</td></tr>
+          <tr><td>S2</td> <td>6.825</td> <td class="best">4.553</td></tr>
+          <tr><td>N2</td> <td>3.292</td> <td class="best">2.475</td></tr>
+          <tr><td>K1</td> <td>6.626</td> <td class="best">3.973</td></tr>
+          <tr><td>O1</td> <td>4.530</td> <td class="best">2.946</td></tr>
         </tbody>
       </table>
     </div>
 
     <p class="caption">
-      All values in cm. BP Anomaly and Atm-Only are full-year (Jan&ndash;Dec 2017) runs.
-      ZAE runs are 6-month (Oct 2016&ndash;Apr 2017) with harmonics over Jan&ndash;Apr 2017
-      and are not directly comparable in absolute magnitude &mdash; relative ordering is meaningful.
+      All values in cm. Both are <b>2D barotropic</b> reference runs, full-year (Jan&ndash;Dec 2017).
+      No RMSE is tabulated for the <b>3D baroclinic</b> runs in the maps below: TPXO9 fields were not
+      available on the machine those were produced on, so they are shown as model amplitude maps
+      against a separate TPXO9 reference rather than as error metrics.
     </p>
   </div>
 
@@ -349,20 +355,29 @@
   <div class="card">
     <h2>Constituent Maps</h2>
 
+    <p class="caption" style="margin-top:0; margin-bottom:0.9rem;">
+      The first two runs are <b>2D barotropic</b> (one-layer shallow water, full-year 2017) and serve
+      as the reference. Everything after the divider is <b>3D baroclinic</b> &mdash; IcoswISC30E3r5 at
+      ~30 km with 64 vertical levels, 66-day runs with harmonics over days 20&ndash;65 &mdash; and forms
+      a progression, each adding one change to the one before it.
+    </p>
+
     <!-- Run tabs -->
     <div class="run-tabs" id="run-tabs">
+      <div class="tab-group-label">2D barotropic</div>
       <div class="run-tab run-coupled  active" onclick="selectRun('bpanomaly')">BP Anomaly (1yr)</div>
       <div class="run-tab run-baseline"        onclick="selectRun('atm-tide-only')">Atm Only (1yr)</div>
-      <div class="run-tab run-zae"             onclick="selectRun('ZAE0.0')">ZAE=0.0 (6mo)</div>
-      <div class="run-tab run-zae"             onclick="selectRun('ZAE0.1')">ZAE=0.1 (6mo)</div>
-      <div class="run-tab run-zae"             onclick="selectRun('ZAE0.2')">ZAE=0.2 (6mo)</div>
-      <div class="run-tab run-zae"             onclick="selectRun('ZAE0.4')">ZAE=0.4 (6mo)</div>
+
+      <div class="tab-divider"></div>
+      <div class="tab-group-label">3D baroclinic</div>
+
       <div class="run-tab run-salfix"          onclick="selectRun('betaSAL-45d')">&beta; SAL (45d)</div>
       <div class="run-tab run-salfix"          onclick="selectRun('SAL29-45d')">Full SAL n=29 (45d)</div>
       <div class="run-tab run-salfix"          onclick="selectRun('SAL29-loglaw-45d')">Full SAL n=29 + log-law (45d)</div>
       <div class="run-tab run-dt600"           onclick="selectRun('SAL29-loglaw-dt600-45d')">&nbsp;&#9733; + &Delta;t=600 s (45d)</div>
       <div class="run-tab run-filt"            onclick="selectRun('SAL29-loglaw-powerlaw-45d')">&nbsp;&#9733;&#9733; + S&amp;McW filter (45d)</div>
       <div class="run-tab run-itide"           onclick="selectRun('JSL-drag-66d')">&nbsp;&#9733;&#9733;&#9733; + internal tide drag (45d)</div>
+      <div class="run-tab run-itide"           onclick="selectRun('JSL-bandpass-66d')">&nbsp;&#9733;&#9733;&#9733;&#9733; + band-passed drag (45d)</div>
     </div>
 
     <!-- View selector -->
@@ -413,28 +428,29 @@
   var runDirs = {
     'bpanomaly':    'img/tpxo/bpanomaly',
     'atm-tide-only':'img/tpxo/atm-tide-only',
-    'ZAE0.0':       'img/tpxo/ZAE0.0',
-    'ZAE0.1':       'img/tpxo/ZAE0.1',
-    'ZAE0.2':       'img/tpxo/ZAE0.2',
-    'ZAE0.4':       'img/tpxo/ZAE0.4',
+
+
+
     'betaSAL-45d':      'img/tpxo/betaSAL-45d',
     'SAL29-45d':        'img/tpxo/SAL29-45d',
     'SAL29-loglaw-45d': 'img/tpxo/SAL29-loglaw-45d',
     'SAL29-loglaw-dt600-45d': 'img/tpxo/SAL29-loglaw-dt600-45d',
     'SAL29-loglaw-powerlaw-45d': 'img/tpxo/SAL29-loglaw-powerlaw-45d',
     'JSL-drag-66d': 'img/tpxo/JSL-drag-66d',
+    'JSL-bandpass-66d': 'img/tpxo/JSL-bandpass-66d',
   };
 
   // Runs whose figures are model-only (single panel, no TPXO comparison panels).
   var modelOnlyRuns = ['betaSAL-45d', 'SAL29-45d', 'SAL29-loglaw-45d', 'SAL29-loglaw-dt600-45d',
-                   'SAL29-loglaw-powerlaw-45d', 'JSL-drag-66d'];
+                   'SAL29-loglaw-powerlaw-45d', 'JSL-drag-66d', 'JSL-bandpass-66d'];
 
   // Shared preamble for the 45-day suite; each run appends its own line.
   var salSuiteCommon =
       'MPAS-Ocean amplitude only &mdash; TPXO9 fields were not available on the machine these were ' +
       'produced on, so the TPXO9 reference map for this constituent is shown separately below. ' +
-      'Co-tidal phase lines every 30&deg;. IcoswISC30E3r5 (~30 km), 66-day run with the ice-shelf-cavity ' +
-      'SAL fix; harmonics over days 20&ndash;65, forced and analysed with M2 S2 N2 K1 O1. ' +
+      'Co-tidal phase lines every 30&deg;. <b>3D baroclinic</b> &mdash; IcoswISC30E3r5 (~30 km) with 64 ' +
+      'vertical levels, unlike the 2D barotropic reference runs &mdash; 66-day run with the ' +
+      'ice-shelf-cavity SAL fix; harmonics over days 20&ndash;65, forced and analysed with M2 S2 N2 K1 O1. ' +
       'Run as a SINGLE job: the LSQ accumulators are not restored across restarts, so earlier segmented ' +
       'runs solved on only their final segment (10.1 and 2.0 days rather than 45). Verified here at ' +
       '2161 samples = 45.0 days. Ratios N2/M2 0.20, K1/M2 0.62, O1/M2 0.46 against observed ' +
@@ -442,7 +458,22 @@
       'M2 uses the same 0&ndash;1.40 m scale as the other runs; S2/N2/K1/O1 scales differ, ' +
       'so compare patterns rather than colours. ';
 
+  // The two reference runs carry their own note so the 2D/3D distinction is on
+  // the page wherever you land, not only in the header text.
+  var twoDCommon =
+      'Each panel: (top-left) MPAS-Ocean amplitude, (top-right) TPXO9 amplitude, (bottom-left) ' +
+      'amplitude RMSE, (bottom-right) complex RMSE. Phase co-tidal lines overlaid. Colour scale in ' +
+      'metres. ' +
+      '<b>2D barotropic reference run</b> &mdash; one-layer shallow water, full-year 2017, so it has ' +
+      'no stratification and no internal tide of its own. Directly comparable against TPXO9, hence the ' +
+      'four-panel figure and the RMSE table above. The 3D baroclinic runs further right are a separate ' +
+      'suite at ~30 km with 64 vertical levels and are not directly comparable in absolute error. ';
+
   var runCaptions = {
+    'bpanomaly': twoDCommon +
+      '<b>This run:</b> bottom-pressure anomaly forcing.',
+    'atm-tide-only': twoDCommon +
+      '<b>This run:</b> atmospheric forcing plus tides only.',
     'betaSAL-45d': salSuiteCommon +
       '<b>This run:</b> scalar SAL &beta;=0.09 with constant C<sub>d</sub>=0.0025 &mdash; the baseline ' +
       'the other two are compared against. Global mean M2 0.1725 m.',
@@ -474,6 +505,40 @@
       'restored (0.348 vs 0.239 m, against 0.215 vs 0.165 m before). The harmonic analysis sampling was '+
       'pinned at 30 min so the diagnostic is identical (LHS[0,0]=1080.5, 2161 samples) and the change is '+
       'demonstrably the model. Cost: 302 s/simulated day vs 123.',
+    'JSL-bandpass-66d': salSuiteCommon +
+      '<b>This run:</b> as the internal tide drag run (&#9733;&#9733;&#9733;), but with the drag made ' +
+      '<b>frequency dependent</b>, following Xu &amp; Zaron (2025, JAMES, 10.1029/2025MS005126). ' +
+      'The single 25-hour boxcar is replaced by two streaming band-pass filters (their Equation 8), ' +
+      'one centred on the semidiurnal band (&omega; = 1.43&times;10<sup>&minus;4</sup> s<sup>&minus;1</sup>, ' +
+      '&alpha; = 0.2) and one on the diurnal (7.0&times;10<sup>&minus;5</sup> s<sup>&minus;1</sup>, ' +
+      '&alpha; = 0.4), and the drag becomes the sum &Sigma;<sub>j</sub> &kappa;<sub>j</sub>C<sub>j</sub>u<sub>j</sub> ' +
+      'over bands (their Equation 2). Each band carries its own &omega; through three places: the ' +
+      'propagation window f &lt; &omega; &lt; N, the Bell/Nycander amplitude factor ' +
+      '&radic;(1&minus;f&sup2;/&omega;&sup2;) that plain JSL omits, and the supercritical saturation ' +
+      'slope &alpha;<sub>IW</sub>. We keep JSL rather than adopting their Nycander tensor. ' +
+      'Filter state is prognostic and stepped with the exact matrix exponential of the filter system ' +
+      '&mdash; the oscillator is only lightly damped (damping ratio 0.1) and forward Euler at ' +
+      '&omega;&Delta;t = 0.26 would diverge. &kappa;<sub>diurnal</sub> = 0.5 against ' +
+      '&kappa;<sub>semi</sub> = 1.0, the ratio from their best baroclinic run (their Table 8). ' +
+      '<b>The physical consequence is the critical latitude splitting by band:</b> 78.7&deg; for ' +
+      'semidiurnal but only <b>28.7&deg;</b> for diurnal, where previously everything used M2 and so ' +
+      'diurnal drag was being applied across the whole midlatitude ocean, in which no diurnal internal ' +
+      'tide can freely propagate. ' +
+      '<b>Result</b> (global mean amplitude, change vs the no-drag &#9733;&#9733; baseline; single-band ' +
+      'run in brackets): M2 0.3336 m, &minus;9.0% (&minus;9.4%); S2 0.1273, &minus;5.4% (&minus;6.2%); ' +
+      'N2 0.0726, &minus;9.2% (&minus;10.8%); <b>K1 0.1202, &minus;0.8% (&minus;4.1%); ' +
+      'O1 0.0895, &minus;1.4% (&minus;6.5%)</b>. The semidiurnals are essentially unchanged, as expected ' +
+      'since that band keeps &kappa; = 1 and its drag barely moves; the diurnals are now almost ' +
+      'undamped, which is the intended correction. Splitting K1 about its own critical latitude shows ' +
+      'the residual reduction is near-uniform (0.8% both equatorward and poleward) rather than ' +
+      'concentrated equatorward &mdash; i.e. the direct diurnal drag is now doing very little anywhere, ' +
+      'and what remains is mostly the indirect response to the changed semidiurnal solution. ' +
+      'Run diagnostics: 0 edges clamped by the stability limit over all 66 days, so the drag is set by ' +
+      'the physics rather than the timestep. ' +
+      '<b>Caveat:</b> at &alpha; = 0.4 the diurnal filter admits 26% of M2, which is why Xu &amp; Zaron ' +
+      'see M2 degrade at that bandwidth; halving &kappa;<sub>diurnal</sub> softens it, and the leakage ' +
+      'only bites equatorward of 28.7&deg; where the diurnal drag is non-zero. If M2 needs recovering, ' +
+      'lowering &alpha;<sub>diurnal</sub> toward 0.2 is the first knob.',
     'JSL-drag-66d': salSuiteCommon +
       '<b>This run:</b> as the S&amp;McW power-law run (&#9733;&#9733;), plus an explicit topographic wave ' +
       'drag &mdash; Jayne &amp; St. Laurent (2001), C = c<sub>topo</sub>&middot;&kappa;&middot;h&sup2;&middot;N<sub>b</sub> ' +
@@ -570,9 +635,9 @@
 
     // Update run tab highlighting
     var tabs = document.querySelectorAll('.run-tab');
-    var runKeys = ['bpanomaly', 'atm-tide-only', 'ZAE0.0', 'ZAE0.1', 'ZAE0.2', 'ZAE0.4',
+    var runKeys = ['bpanomaly', 'atm-tide-only',
                    'betaSAL-45d', 'SAL29-45d', 'SAL29-loglaw-45d',
-                   'SAL29-loglaw-dt600-45d', 'SAL29-loglaw-powerlaw-45d', 'JSL-drag-66d'];
+                   'SAL29-loglaw-dt600-45d', 'SAL29-loglaw-powerlaw-45d', 'JSL-drag-66d', 'JSL-bandpass-66d'];
     tabs.forEach(function(t, i) { t.classList.toggle('active', runKeys[i] === run); });
 
     // Show diff/bias view buttons only for bpanomaly
