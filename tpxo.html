@@ -121,8 +121,11 @@
   .diff-only { display: none; }
   .show-diff-views .diff-only { display: inline-block; }
 
-  /* Runs with model-only maps (no TPXO error fields) hide the error views */
+  /* The 3D runs have no TPXO panels inside their figures, so they swap the
+     four-panel error views for the separately computed bias/RMSE maps. */
   .model-only .err-view { display: none; }
+  .bc-view { display: none; }
+  .model-only .bc-view { display: inline-block; }
 
   .sep { width: 1px; height: 1.2rem; background: var(--border); align-self: center; }
 
@@ -345,9 +348,11 @@
 
     <p class="caption">
       All values in cm. Both are <b>2D barotropic</b> reference runs, full-year (Jan&ndash;Dec 2017).
-      No RMSE is tabulated for the <b>3D baroclinic</b> runs in the maps below: TPXO9 fields were not
-      available on the machine those were produced on, so they are shown as model amplitude maps
-      against a separate TPXO9 reference rather than as error metrics.
+      The <b>3D baroclinic</b> runs are not in this table, but they are no longer without error
+      metrics: TPXO9-atlas v5 is now read directly and sampled onto the model cells, so each of
+      those runs has its own <b>Amplitude bias</b> and <b>Complex RMSE</b> map in the section below,
+      with the area-weighted global / deep / shallow values printed on each RMSE figure.
+      See <code>tools/make_tpxo_plots.py</code>.
     </p>
   </div>
 
@@ -385,6 +390,8 @@
       <button class="view-btn active" onclick="selectView('harmonic')">Harmonic maps</button>
       <button class="view-btn err-view" onclick="selectView('amperr')">Amplitude error</button>
       <button class="view-btn err-view" onclick="selectView('phaseerr')">Phase error</button>
+      <button class="view-btn bc-view" onclick="selectView('bias')">Amplitude bias</button>
+      <button class="view-btn bc-view" onclick="selectView('rmse')">Complex RMSE</button>
       <div class="sep"></div>
       <button class="view-btn diff-only" onclick="selectView('diff')">RMSE difference (BP &minus; Atm)</button>
       <button class="view-btn diff-only" onclick="selectView('ampbias')">Amplitude bias</button>
@@ -446,8 +453,8 @@
 
   // Shared preamble for the 45-day suite; each run appends its own line.
   var salSuiteCommon =
-      'MPAS-Ocean amplitude only &mdash; TPXO9 fields were not available on the machine these were ' +
-      'produced on, so the TPXO9 reference map for this constituent is shown separately below. ' +
+      'MPAS-Ocean amplitude; the TPXO9 reference for this constituent is shown directly below, and the ' +
+      '<b>Amplitude bias</b> and <b>Complex RMSE</b> views hold the error maps against it. ' +
       'Co-tidal phase lines every 30&deg;. <b>3D baroclinic</b> &mdash; IcoswISC30E3r5 (~30 km) with 64 ' +
       'vertical levels, unlike the 2D barotropic reference runs &mdash; 66-day run with the ' +
       'ice-shelf-cavity SAL fix; harmonics over days 20&ndash;65, forced and analysed with M2 S2 N2 K1 O1. ' +
@@ -577,12 +584,21 @@
     'phaseerr': 'Phase error &phi;m &minus; &phi;t (degrees, wrapped to &plusmn;180&deg;). Red = model leads TPXO9; blue = model lags. Color scale is shared across all runs.',
     'diff':     'Complex RMSE difference (BP Anomaly &minus; Atm-Tide-Only) in cm. Red = BP Anomaly worse; blue = BP Anomaly better.',
     'ampbias':  'Amplitude bias (model &minus; TPXO9) for BP Anomaly (left) and Atm-Only (right) in cm.',
+    'bias':     'Amplitude bias A&#x2098; &minus; A&#x209C; (cm), computed against TPXO9-atlas v5 sampled onto the ' +
+                'IcoswISC30E3r5 cells. Red = model over-predicts; blue = under-predicts. Scale is &plusmn;A&#x2098;&#x2090;&#x2093;/10 ' +
+                'and is shared across every 3D run, so the early runs saturate where the deficit exceeds it. ' +
+                'Water shallower than 20 m is excluded.',
+    'rmse':     'Complex RMSE E&#x1D450; = &radic;[ &frac12;(A&#x2098;&#xB2; + A&#x209C;&#xB2;) &minus; A&#x2098; A&#x209C; cos(&phi;&#x2098; &minus; &phi;&#x209C;) ] ' +
+                'in cm, against TPXO9-atlas v5. Scale is 0&ndash;A&#x2098;&#x2090;&#x2093;/5, shared across every 3D run. ' +
+                'The title quotes the area-weighted global, deep and shallow values using the region definitions at the top of this page.',
   };
 
   var viewFiles = {
     'harmonic': '_plot.png',
     'amperr':   '_amp_error.png',
     'phaseerr': '_phase_error.png',
+    'bias':     '_bias.png',
+    'rmse':     '_rmse.png',
   };
 
   function updatePlot() {
@@ -661,6 +677,8 @@
     'phaseerr': 'Phase error',
     'diff':     'RMSE difference',
     'ampbias':  'Amplitude bias',
+    'bias':     'Amplitude bias',
+    'rmse':     'Complex RMSE',
   };
 
   function selectView(view) {
