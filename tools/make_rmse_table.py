@@ -60,6 +60,7 @@ COLUMNS = [
     ("SAL29-loglaw-powerlaw-45d", "+ S&amp;McW", "45d 3D", "#17becf", "3d"),
     ("JSL-drag-66d", "+ JSL drag", "45d 3D", "#e377c2", "3d"),
     ("JSL-bandpass-66d", "+ bandpass", "45d 3D", "#e377c2", "3d"),
+    ("JSL-rerun-66d", "+ JSL rerun", "45d 3D", "#8c564b", "3d"),
 ]
 
 
