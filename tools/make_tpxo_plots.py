@@ -92,9 +92,14 @@ RUNS = {
         "S&McW filter + JSL internal tide drag (45d)",
     ),
     "JSL-bandpass-66d": (
-        f"{E3SM}/IcoswISC30E3r5_JSL/run/"
+        f"{SAVED}/run_JSL_bandpass_ad0.4_kd0.5_66day/hist/"
         "IcoswISC30E3r5_JSL.mpaso.hist.am.harmonicAnalysis.0001-03-01.nc",
         "JSL drag split into semidiurnal/diurnal bands (45d)",
+    ),
+    "JSL-rerun-66d": (
+        f"{E3SM}/IcoswISC30E3r5_JSL/run/"
+        "IcoswISC30E3r5_JSL.mpaso.hist.am.harmonicAnalysis.0001-03-01.nc",
+        "S&McW + JSL boxcar, rerun 2026-11-05 (45d)",
     ),
 }
 
